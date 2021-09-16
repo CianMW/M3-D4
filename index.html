@@ -7,7 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <title>Shopping cart</title>
   </head>
   <body>
@@ -25,7 +25,7 @@
     When this button is pressed, add the item to another list and change its styling
     *Add a skip button inside each card
     *When pressed, this button should hide the specific book from the page
-    Add a search bar. When the user types more than 3 characters, filter the content of the API response to only display the books with a matching (or partially matching) title (hint: use .filter)
+    *Add a search bar. When the user types more than 3 characters, filter the content of the API response to only display the books with a matching (or partially matching) title (hint: use .filter)
     Allow users to delete books from their cart
     EXTRAS:
     Add a empty cart button, to delete the whole list
@@ -47,20 +47,29 @@
                 let pageContainer = document.createElement("div")
                     pageContainer.classList.add("container-fluid")
                 let newNavNode = document.createElement("nav")
-                    newNavNode.className = "navbar navbar-light bg-light"
+                    newNavNode.className = "navbar navbar-light bg-light mb-4"
 
                     pageContainer.appendChild(newNavNode)
+                    
 
-                    newNavNode.innerHTML = `
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="input" onchange="bookSearch(event)" pattern=".{3,} placeholder="Search" aria-label="Search">
+                    newNavNode.innerHTML = ` 
+                <form class="form-inline"> 
+                <div class="dropdown mr-5">
+                    <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-cart"></i> Cart
+                    </button>
+                    <div class="dropdown-menu dropdown-cart text-align" aria-labelledby="dropdownMenuButton" style="overflow-y: scroll; width: 500px">
+                </div>
+                </div>
+                    <input class="form-control mr-sm-2" type="input" onchange="bookSearch(event)" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
+         
                 `
 
 
                 let containerNode = document.createElement("div")
-                containerNode.className = "container-fluid"
+                containerNode.className = "container"
                 let rowNode = document.createElement("div")
                 rowNode.className = "row d-flex"
 
@@ -70,22 +79,24 @@
 
                 body.forEach(body => {
                     let elementImage = body.img
+                    let elementTitle = body.title
+                    let elementPrice = body.price
                     let newBookNode = document.createElement("div")
-                    newBookNode.className = "card col-2"
+                    newBookNode.className = "card col-3 mb-5"
                     newBookNode.setAttribute("style", "width: 6rem")
 
 
 
                     newBookNode.innerHTML = `
                     
-                        <img class="card-img-top" src="${elementImage}" width = 80% height = "300" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                        <div class="card-body justify-content-between">
-                            <button type="button" class="btn btn-secondary" onclick="addToCart(event)"><i class="bi bi-bag-plus">Add to Cart</i></button>
-                            <button type="button" class="btn btn-danger" onclick="skipCard(event)">Skip<i class="bi bi-bag-plus"></i></button>
+                        <img class="card-img-top img-fluid" src="${elementImage}" alt="Card image cap" style="object-fit: contain">
+                     
+                        <h5 class="card-title">${elementTitle}</h5>
+                        <p class="card-text">€${elementPrice}</p>
+    
+                        <div class="card-body d-flex flex-row justify-content-between p-0 ">
+                            <button type="button" class="btn btn-secondary p-1" onclick="addToCart(event)" style="max-height:112 !important; max-width:34 !important"><i class="bi bi-bag-plus "></i> Add to Cart</button>
+                            <button type="button" class="btn btn-danger p-1 " onclick="skipCard(event)" style="max-height:112 !important; max-width:34 !important">Skip<i class="bi bi-x-circle "></i></button>
                         </div>
                     `
 
@@ -98,11 +109,20 @@
         }
 
         const addToCart = (event) => {
-            event.currentTarget.closest(".col-2").className = "card col-2 bg-secondary"
+            event.currentTarget.closest(".col-3").className = "card bg-secondary d-flex flex-row justify-content-between"
+            event.currentTarget.closest(".card-body").classList.add("mr-3")
+            //event.currentTarget.closest(".card-img-top").classList.add("mr-2")
+            //event.currentTarget.closest(".card-title").classList.add("col-3")
+            //event.currentTarget.closest(".card-text").classList.add("col-3")
+            
+            
+            let currentItem = event.currentTarget.closest(".card")
+            document.querySelector(".dropdown-cart").appendChild(currentItem)
+            
         }
 
         const skipCard = (event) => {
-            event.currentTarget.closest(".col-2").remove()
+            event.currentTarget.closest(".col-3").remove()
         }
 
         const bookSearch = (event) => {
@@ -128,24 +148,26 @@
 
                 searchResults.forEach(searchResults => {
                     let elementImage = searchResults.img
+                    let elementTitle = searchResults.title
+                    let elementPrice = searchResults.price
                     let newBookNode = document.createElement("div")
-                    newBookNode.className = "card col-2"
+                    newBookNode.className = "card col-3"
                     newBookNode.setAttribute("style", "width: 6rem")
 
 
                 
                     newBookNode.innerHTML= `
                     
-                        <img class="card-img-top" src="${elementImage}" width = 80% height = "300" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                        <div class="card-body justify-content-between">
-                            <button type="button" class="btn btn-secondary" onclick="addToCart(event)"><i class="bi bi-bag-plus">Add to Cart</i></button>
-                            <button type="button" class="btn btn-danger" onclick="skipCard(event)">Skip<i class="bi bi-bag-plus"></i></button>
-                        </div>
-                    `
+                    <img class="card-img-top" src="${elementImage}"  alt="Card image cap">
+                    
+                    <h5 class="card-title">${elementTitle}</h5>
+                    <p class="card-text">${elementPrice}</p>
+                    
+                    <div class="card-body d-flex flex-row p-0">
+                        <button type="button" class="btn btn-secondary p-1 " onclick="addToCart(event)" style="max-height:112 !important; max-width:34 !important"><i class="bi bi-bag-plus"></i> Add to Cart</button>
+                        <button type="button" class="btn btn-danger p-1 " onclick="skipCard(event)" style="max-height:112 !important; max-width:34 !important">Skip<i class="bi bi-x-circle"></i></button>
+                    </div>
+                `
 
                     document.querySelector("div .row").appendChild(newBookNode)
                     })
