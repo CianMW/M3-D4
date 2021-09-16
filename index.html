@@ -111,16 +111,25 @@
         const addToCart = (event) => {
             event.currentTarget.closest(".col-3").className = "card bg-secondary d-flex flex-row justify-content-between"
             event.currentTarget.closest(".card-body").classList.add("mr-3")
+        
+
             //event.currentTarget.closest(".card-img-top").classList.add("mr-2")
             //event.currentTarget.closest(".card-title").classList.add("col-3")
             //event.currentTarget.closest(".card-text").classList.add("col-3")
-            
-            
+            let newButtonNode = document.createElement("button")
+            newButtonNode.innerHTML = `<button type="button" class="btn btn-danger remove p-1 " onclick="removeFromCart(event)" style="max-height:112 !important; max-width:34 !important">Remove<i class="bi bi-x-circle "></i></button>`
+            event.currentTarget.closest(".card").appendChild(newButtonNode)
             let currentItem = event.currentTarget.closest(".card")
             document.querySelector(".dropdown-cart").appendChild(currentItem)
+            event.currentTarget.closest(".btn-secondary").remove()
+            
             
         }
 
+
+        const removeFromCart = (event) => {
+            event.currentTarget.closest(".card").remove()
+        }
         const skipCard = (event) => {
             event.currentTarget.closest(".col-3").remove()
         }
